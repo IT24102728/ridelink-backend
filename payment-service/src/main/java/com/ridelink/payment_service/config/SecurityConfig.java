@@ -20,14 +20,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
+            .csrf(c -> c.disable())
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
+                    "/swagger-ui.html",
                     "/swagger-ui/**",
+                    "/v3/api-docs",
                     "/v3/api-docs/**",
-                    "/api/payments/estimate",
-                    "/api/payments/final-fare"   // interservice - called by Ride Service
+                    "/swagger-resources/**",
+                    "/webjars/**",
+                    "/actuator/**",
+                    // Interservice endpoints (called by Ride Service)
+                    "/api/fares/estimate",
+                    "/api/payments"
                 ).permitAll()
                 .anyRequest().authenticated()
             )

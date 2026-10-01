@@ -6,9 +6,9 @@ spring:
     name: payment-service
 
   datasource:
-    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:ridelink_payment}?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-    username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:root}
+    url: jdbc:mysql://localhost:3306/ridelink_fare?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: ride
+    password: ride123
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -17,19 +17,21 @@ spring:
     show-sql: true
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
 
 jwt:
-  secret: ${JWT_SECRET:ridelink-super-secret-key-must-be-at-least-256-bits-long-for-hs256-algorithm}
+  secret: ridelink-super-secret-key-must-be-at-least-256-bits-long-for-hs256-algorithm
   expiration: 86400000
 
-# Fare configuration (documented rule)
+# ---- Fare calculation rules (documented business rule) ----
+# total = baseFare + (distanceKm × ratePerKm) + (waitingMinutes × waitingChargePerMin)
+# serviceFee = subtotal × serviceFeePercent / 100
+# finalTotal = subtotal + serviceFee
 fare:
-  base-fare: 300.0          # LKR base
-  rate-per-km: 100.0        # LKR per km
-  waiting-charge-per-min: 5.0
-  service-fee-percent: 2.0
+  base-fare: 300.00                 # LKR — flat base fare
+  rate-per-km: 80.00                # LKR per kilometre
+  waiting-charge-per-min: 5.00      # LKR per minute of waiting
+  service-fee-percent: 5.0          # 5% platform fee
 
 springdoc:
   swagger-ui:
