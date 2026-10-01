@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: ridelink-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: ridelink
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docs/db-init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: ridelink-rabbit
+    environment:
+      RABBITMQ_DEFAULT_USER: ridelink
+      RABBITMQ_DEFAULT_PASS: ridelink
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mysql_data:
