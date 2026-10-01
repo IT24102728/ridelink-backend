@@ -1,0 +1,41 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: ride-service
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/ridelink_ride?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: ride
+    password: ride123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+
+jwt:
+  secret: ridelink-super-secret-key-must-be-at-least-256-bits-long-for-hs256-algorithm
+  expiration: 86400000
+
+services:
+  driver-service:
+    url: http://localhost:8082
+  fare-service:
+    url: http://localhost:8084
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+logging:
+  level:
+    com.ridelink.ride_service: DEBUG
